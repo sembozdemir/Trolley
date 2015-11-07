@@ -1,0 +1,117 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.taurus.trolley.ProfileFragment">
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        app:umanoDragView="@+id/image_view_draggable"
+        app:umanoOverlay="true"
+        app:umanoPanelHeight="120dp"
+        app:umanoParallaxOffset="150dp"
+        app:umanoShadowHeight="0dp">
+
+        <!-- Main Content -->
+        <LinearLayout
+            android:id="@+id/main_layout"
+            android:background="@drawable/background_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_margin="16dp"
+                android:padding="16dp"
+                android:background="@drawable/profile_welcome_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Profile Pic -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:src="@drawable/ic_placeholder_user"
+                    android:id="@+id/image_view_profile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"/>
+
+                <!-- Welcome Message -->
+                <TextView
+                    android:id="@+id/text_view_welcome_message"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Hi, Semih" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="90dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- star image -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_star_profile_screen" />
+
+                <!-- coin info -->
+                <TextView
+                    android:textColor="#FFFFFF"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:id="@+id/text_view_coins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="22" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- Sliding Panel -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="#EEEEEE"
+                    android:layout_alignParentBottom="true" />
+
+                <ImageView
+                    android:id="@+id/image_view_draggable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_bag_alternative" />
+
+            </RelativeLayout>
+
+            <ListView
+                android:background="#EEEEEE"
+                android:id="@+id/list_view_shopping"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</FrameLayout>
