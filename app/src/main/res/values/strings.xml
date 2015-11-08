@@ -7,4 +7,6 @@
     <string name="tab_profile_title">Profile</string>
     <string name="tab_nearby_title">Nearby</string>
     <string name="tab_badges_title">Badges</string>
+
+    <string name="facebook_app_id">1490464894588820</string>
 </resources>
