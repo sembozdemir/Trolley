@@ -8,21 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.taurus.trolley.R;
 import com.taurus.trolley.domain.Offer;
-import com.taurus.trolley.domain.Transaction;
+import com.taurus.trolley.domain.OfferHistory;
 
 import java.util.List;
 
 /**
  * Created by semih on 07.11.2015.
  */
-public class ShoppingListAdapter extends ArrayAdapter<Transaction> {
-    private List<Transaction> itemList;
+public class OfferHistoryListAdapter extends ArrayAdapter<OfferHistory> {
+    private List<OfferHistory> itemList;
     private Context context;
     private int layoutId;
 
-    public ShoppingListAdapter(Context context, int layoutId, List<Transaction> objects) {
+    public OfferHistoryListAdapter(Context context, int layoutId, List<OfferHistory> objects) {
         super(context, layoutId, objects);
         this.layoutId = layoutId;
         this.context = context;
@@ -35,7 +36,7 @@ public class ShoppingListAdapter extends ArrayAdapter<Transaction> {
     }
 
     @Override
-    public Transaction getItem(int position) {
+    public OfferHistory getItem(int position) {
         return itemList.get(position);
     }
 
@@ -64,15 +65,13 @@ public class ShoppingListAdapter extends ArrayAdapter<Transaction> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Transaction transaction = itemList.get(position);
-        Offer offer = transaction.getOffer();
+        OfferHistory offerHistory = itemList.get(position);
+        Offer offer = offerHistory.getOffer();
 
-//        String brandLogoUrl = offer.getShop().getBrand().getLogoUrl();
-//        Picasso.with(context)
-//                .load(brandLogoUrl)
-//                .placeholder(R.drawable.ic_bag)
-//                .into(viewHolder.imageViewBrand);
-        viewHolder.imageViewBrand.setImageResource(R.drawable.ic_bag);
+        Picasso.with(context)
+                .load(offer.getOfferImageUrl())
+                .placeholder(R.drawable.ic_bag)
+                .into(viewHolder.imageViewBrand);
 
         String description = offer.getDescription();
         viewHolder.textViewDescription.setText(description);

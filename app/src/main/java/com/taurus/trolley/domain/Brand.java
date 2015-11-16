@@ -1,43 +1,38 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
  */
-public class Brand {
-    private String objectId;
-    private String name;
-    private String logoUrl;
+@ParseClassName("Brand")
+public class Brand extends ParseObject {
+
+    public static final String NAME = "name";
+    public static final String LOGO_URL = "logoUrl";
 
     public Brand() {
     }
 
-    public Brand(String objectId, String name, String logoUrl) {
-        this.objectId = objectId;
-        this.name = name;
-        this.logoUrl = logoUrl;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public Brand(String name, String logoUrl) {
+        setName(name);
+        setLogoUrl(logoUrl);
     }
 
     public String getName() {
-        return name;
+        return getString(NAME);
     }
 
     public void setName(String name) {
-        this.name = name;
+        put(NAME, name);
     }
 
     public String getLogoUrl() {
-        return logoUrl;
+        return getString(LOGO_URL);
     }
 
     public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
+        put(LOGO_URL, logoUrl);
     }
 }

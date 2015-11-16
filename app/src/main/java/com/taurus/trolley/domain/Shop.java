@@ -1,53 +1,60 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
  */
-public class Shop {
-    private String objectId;
-    private Brand brand;
-    double latitude;
-    double longitude;
+
+@ParseClassName("Shop")
+public class Shop extends ParseObject{
+
+    public static final String BRAND = "brand";
+    public static final String GEO_POINT = "geoPoint";
+    public static final String NAME = "name";
 
     public Shop() {
     }
 
-    public Shop(String objectId, Brand brand, double latitude, double longitude) {
-        this.objectId = objectId;
-        this.brand = brand;
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Shop(String name, Brand brand, double latitude, double longitude) {
+        setName(name);
+        setBrand(brand);
+        setGeoPoint(new ParseGeoPoint(latitude, longitude));
     }
 
-    public String getObjectId() {
-        return objectId;
+    public Shop(String name, Brand brand, ParseGeoPoint geoPoint) {
+        setName(name);
+        setBrand(brand);
+        setGeoPoint(geoPoint);
     }
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public String getName() {
+        return getString(NAME);
+    }
+
+    public void setName(String name) {
+        put(NAME, name);
+    }
+
+    private void setGeoPoint(ParseGeoPoint geoPoint) {
+        put(GEO_POINT, geoPoint);
+    }
+
+    private void setGeoPoint(double latitude, double longitude) {
+        put(GEO_POINT, new ParseGeoPoint(latitude, longitude));
+    }
+
+    public ParseGeoPoint getGeoPoint() {
+        return getParseGeoPoint(GEO_POINT);
     }
 
     public Brand getBrand() {
-        return brand;
+        return (Brand) getParseObject(BRAND);
     }
 
     public void setBrand(Brand brand) {
-        this.brand = brand;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        put(BRAND, brand);
     }
 }

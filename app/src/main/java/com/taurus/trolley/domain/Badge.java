@@ -1,33 +1,38 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
  */
-public class Badge {
-    private String objectId;
-    private int iconResId;
+
+@ParseClassName("Badge")
+public class Badge extends ParseObject {
+    private static final String NAME = "NAME";
+    private static final String DESCRIPTION = "DESCRIPTION";
 
     public Badge() {
     }
 
-    public Badge(String objectId, int iconResId) {
-        this.objectId = objectId;
-        this.iconResId = iconResId;
+    public Badge(String name, String description) {
+        setName(name);
+        setDescription(description);
     }
 
-    public String getObjectId() {
-        return objectId;
+    public String getName() {
+        return getString(NAME);
     }
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public void setName(String name) {
+        put(NAME, name);
     }
 
-    public int getIconResId() {
-        return iconResId;
+    public String getDescription() {
+        return getString(DESCRIPTION);
     }
 
-    public void setIconResId(int iconResId) {
-        this.iconResId = iconResId;
+    public void setDescription(String description) {
+        put(DESCRIPTION, description);
     }
 }

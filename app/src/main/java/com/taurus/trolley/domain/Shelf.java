@@ -1,43 +1,39 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
  */
-public class Shelf {
-    private String objectId;
-    private Shop shop;
-    private String name;
+
+@ParseClassName("Shelf")
+public class Shelf extends ParseObject {
+
+    public static final String SHOP = "shop";
+    public static final String NAME = "name";
 
     public Shelf() {
     }
 
-    public Shelf(String objectId, Shop shop, String name) {
-        this.objectId = objectId;
-        this.shop = shop;
-        this.name = name;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public Shelf(String name, Shop shop) {
+        setShop(shop);
+        setName(name);
     }
 
     public Shop getShop() {
-        return shop;
+        return (Shop) getParseObject(SHOP);
     }
 
     public void setShop(Shop shop) {
-        this.shop = shop;
+        put(SHOP, shop);
     }
 
     public String getName() {
-        return name;
+        return getString(NAME);
     }
 
     public void setName(String name) {
-        this.name = name;
+        put(NAME, name);
     }
 }

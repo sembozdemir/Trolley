@@ -1,43 +1,38 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
  */
-public class Beacon {
-    private String objectId;
-    private String beaconKey;
-    private Shelf shelf;
+
+@ParseClassName("Beacon")
+public class Beacon extends ParseObject {
+    public static final String BLUETOOTH_ADDRESS = "bluetoothAddress";
+    public static final String SHELF = "shelf";
 
     public Beacon() {
     }
 
-    public Beacon(String objectId, String beaconKey, Shelf shelf) {
-        this.objectId = objectId;
-        this.beaconKey = beaconKey;
-        this.shelf = shelf;
+    public Beacon(String bluetoothAddress, Shelf shelf) {
+        setBluetoothAddress(bluetoothAddress);
+        setShelf(shelf);
     }
 
-    public String getObjectId() {
-        return objectId;
+    public String getBluetoothAddress() {
+        return getString(BLUETOOTH_ADDRESS);
     }
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    public String getBeaconKey() {
-        return beaconKey;
-    }
-
-    public void setBeaconKey(String beaconKey) {
-        this.beaconKey = beaconKey;
+    public void setBluetoothAddress(String bluetoothAddress) {
+        put(BLUETOOTH_ADDRESS, bluetoothAddress);
     }
 
     public Shelf getShelf() {
-        return shelf;
+        return (Shelf) getParseObject(SHELF);
     }
 
     public void setShelf(Shelf shelf) {
-        this.shelf = shelf;
+        put(SHELF, shelf);
     }
 }

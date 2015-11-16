@@ -1,6 +1,10 @@
 package com.taurus.trolley.dummy;
 
+import com.taurus.trolley.domain.Beacon;
+import com.taurus.trolley.domain.Brand;
 import com.taurus.trolley.domain.Offer;
+import com.taurus.trolley.domain.Shelf;
+import com.taurus.trolley.domain.Shop;
 import com.taurus.trolley.domain.Transaction;
 
 import java.util.ArrayList;
@@ -28,5 +32,32 @@ public class DummyData {
         }
 
         return list;
+    }
+
+    public static void setDummiesForParse() {
+        // Create Brand
+        Brand zara = new Brand("Zara", "http://imgreview.com/i/gVL2w");
+        zara.saveInBackground();
+        // create Shop
+        Shop zaraForumBornova = new Shop("Zara Forum Bornova", zara, 42.0, 44.0);
+        zaraForumBornova.saveInBackground();
+        // create Jeans Shelf
+        Shelf zaraShopJeansShelf = new Shelf("Zara Forum Bornova Shelf Jeans", zaraForumBornova);
+        zaraShopJeansShelf.saveInBackground();
+        // create Shirts Shelf
+        Shelf zaraShopShirtsShelf = new Shelf("Zara Forum Bornova Shelf Shirts", zaraForumBornova);
+        zaraShopJeansShelf.saveInBackground();
+        // create Offer for Jeans
+        Offer offerJeans = new Offer(zaraShopJeansShelf, "Tebrikler, Zara'dan bütün jeans ürünlerinde %50 indirim fırsatı yakaladın! Keşfetmeye devam et!", 5, "http://imgreview.com/i/gVL2w");
+        offerJeans.saveInBackground();
+        // create Offer for Shirts
+        Offer offerShirts = new Offer(zaraShopShirtsShelf, "Şimdi, sadece sana özel! Zara'dan 1 gömlek alırsan ikincisi anında hediye! Bu fırsat kaçmaz!", 5, "http://imgreview.com/i/gVL2w");
+        offerShirts.saveInBackground();
+        // create Beacon for Jeans shelf
+        Beacon beaconJeans = new Beacon("E2:93:2A:92:EE:80", zaraShopJeansShelf);
+        beaconJeans.saveInBackground();
+        // create Beacon for Shirts shelf
+        Beacon beaconShirts = new Beacon("D7:53:00:31:7D:1D", zaraShopShirtsShelf);
+        beaconShirts.saveInBackground();
     }
 }

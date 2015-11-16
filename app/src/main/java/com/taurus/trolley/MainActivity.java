@@ -1,51 +1,66 @@
 package com.taurus.trolley;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
+import com.squareup.otto.Subscribe;
+import com.taurus.trolley.busevents.BluetoothEvent;
+import com.taurus.trolley.domain.User;
+import com.taurus.trolley.helper.BluetoothStateHelper;
+import com.taurus.trolley.services.BeaconDiscoverer;
+import com.taurus.trolley.utils.OfferHistory;
+import com.taurus.trolley.utils.Utility;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private CoordinatorLayout coordinatorLayout;
+    private BluetoothStateHelper bluetoothStateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        bluetoothStateReceiver = new BluetoothStateHelper();
 
-        keyHash();
+        final User currentUser = User.currentUser();
+        if (currentUser != null) {
+            // do stuff with the user
 
-        List<String> permissions = Arrays.asList("public_profile", "email");
+            // To see dummy datas on Parse.com. It should be invoked only once for same data.
+            // DummyData.setDummiesForParse();
 
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (user == null) {
-                    Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
-                } else if (user.isNew()) {
-                    Log.d(TAG, "User signed up and logged in through Facebook!");
-                } else {
-                    Log.d(TAG, "User logged in through Facebook!");
-                }
+            OfferHistory.init();
+            startService(new Intent(this, BeaconDiscoverer.class));
+
+            // if the device is prelollipop, user has to turn bluetooth on to detect beacons
+            if (Utility.isPreLollipop()) {
+                // Register for broadcasts on BluetoothAdapter state change
+                IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+                registerReceiver(bluetoothStateReceiver, filter);
             }
-        });
+        } else {
+            // show the signup or login screen
+            stopService(new Intent(this, BeaconDiscoverer.class));
+            redirectToLoginActivity();
+        }
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -58,6 +73,80 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        App.bus.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        App.bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bluetoothStateReceiver.isRegistered()) {
+            unregisterReceiver(bluetoothStateReceiver);
+            bluetoothStateReceiver.setRegistered(false);
+        }
+    }
+
+    @Subscribe
+    public void bluetoothEventReceived(BluetoothEvent event) {
+        switch (event.state) {
+            case BluetoothAdapter.STATE_OFF:
+                handleBluetoothStateOff();
+                break;
+            case BluetoothAdapter.STATE_TURNING_OFF:
+                Log.i(TAG, "Turning Bluetooth off...");
+                break;
+            case BluetoothAdapter.STATE_ON:
+                handleBluetoothStateOn();
+                break;
+            case BluetoothAdapter.STATE_TURNING_ON:
+                handleBluetoothStateTurningOn();
+                break;
+        }
+    }
+
+    private void handleBluetoothStateTurningOn() {
+        String message = "Bluetooth Turning On";
+        Log.i(TAG, message);
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT)
+                .setText(message).show();
+    }
+
+    private void handleBluetoothStateOn() {
+        String message = "Bluetooth On";
+        Log.i(TAG, message);
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
+                .setText(message).show();
+    }
+
+    private void handleBluetoothStateOff() {
+        String message = "Bluetooth Off";
+        Log.i(TAG, message);
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setText(message)
+                .setAction("TURN ON", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BluetoothStateHelper.turnOnBluetooth();
+                    }
+                }).show();
+    }
+
+    private void redirectToLoginActivity() {
+        Intent i = new Intent(this, LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 
     private void keyHash() {
@@ -75,12 +164,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
 
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

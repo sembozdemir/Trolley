@@ -1,43 +1,39 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
+ * @deprecated no needed anymore
  */
-public class Transaction {
-    private String objectId;
-    private User user;
-    private Offer offer;
+
+@ParseClassName("Transaction")
+public class Transaction extends ParseObject {
+    public static final String USER = "user";
+    public static final String OFFER = "offer";
 
     public Transaction() {
     }
 
-    public Transaction(String objectId, User user, Offer offer) {
-        this.objectId = objectId;
-        this.user = user;
-        this.offer = offer;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public Transaction(User user, Offer offer) {
+        setUser(user);
+        setOffer(offer);
     }
 
     public User getUser() {
-        return user;
+        return (User) getParseUser(USER);
     }
 
     public void setUser(User user) {
-        this.user = user;
+        put(USER, user);
     }
 
     public Offer getOffer() {
-        return offer;
+        return (Offer) getParseObject(OFFER);
     }
 
     public void setOffer(Offer offer) {
-        this.offer = offer;
+        put(OFFER, offer);
     }
 }

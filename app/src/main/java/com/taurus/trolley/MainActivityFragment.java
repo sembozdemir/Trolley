@@ -25,7 +25,6 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         initTabAndPager(rootView);
 
-
         return rootView;
     }
 

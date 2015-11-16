@@ -1,53 +1,59 @@
 package com.taurus.trolley.domain;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by semih on 07.11.2015.
  */
-public class Offer {
-    private String objectId;
-    private Shop shop;
-    private String description;
-    private int value;
+
+@ParseClassName("Offer")
+public class Offer extends ParseObject {
+
+    public static final String SHELF = "shelf";
+    public static final String DESCRIPTION = "description";
+    public static final String SCORE_VALUE = "scoreValue";
+    public static final String OFFER_IMAGE_URL = "offerImageUrl";
 
     public Offer() {
     }
 
-    public Offer(Shop shop, String objectId, String description, int value) {
-        this.shop = shop;
-        this.objectId = objectId;
-        this.description = description;
-        this.value = value;
+    public Offer(Shelf shelf, String description, int scoreValue, String imageUrl) {
+        setShelf(shelf);
+        setDescription(description);
+        setScoreValue(scoreValue);
+        setOfferImageUrl(imageUrl);
     }
 
-    public String getObjectId() {
-        return objectId;
+    public String getOfferImageUrl() {
+        return getString(OFFER_IMAGE_URL);
     }
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
+    public void setOfferImageUrl(String imageUrl) {
+        put(OFFER_IMAGE_URL, imageUrl);
     }
 
-    public Shop getShop() {
-        return shop;
+    public Shelf getShelf() {
+        return (Shelf) getParseObject(SHELF);
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void setShelf(Shelf shelf) {
+        put(SHELF, shelf);
     }
 
     public String getDescription() {
-        return description;
+        return getString(DESCRIPTION);
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        put(DESCRIPTION, description);
     }
 
-    public int getValue() {
-        return value;
+    public int getScoreValue() {
+        return getInt(SCORE_VALUE);
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setScoreValue(int scoreValue) {
+        put(SCORE_VALUE, scoreValue);
     }
 }

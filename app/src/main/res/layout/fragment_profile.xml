@@ -42,13 +42,13 @@
                 <TextView
                     android:id="@+id/text_view_welcome_message"
                     android:layout_marginLeft="8dp"
+                    android:text="Hi"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:gravity="center_vertical"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Hi, Semih" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -106,7 +106,7 @@
 
             <ListView
                 android:background="#EEEEEE"
-                android:id="@+id/list_view_shopping"
+                android:id="@+id/list_view_offer_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
