@@ -2,7 +2,6 @@ package com.taurus.trolley;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -20,9 +19,6 @@ import com.squareup.otto.Subscribe;
 import com.taurus.trolley.busevents.BluetoothEvent;
 import com.taurus.trolley.domain.User;
 import com.taurus.trolley.helper.BluetoothStateHelper;
-import com.taurus.trolley.services.BeaconDiscoverer;
-import com.taurus.trolley.utils.OfferHistory;
-import com.taurus.trolley.utils.Utility;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,18 +43,10 @@ public class MainActivity extends AppCompatActivity {
             // To see dummy datas on Parse.com. It should be invoked only once for same data.
             // DummyData.setDummiesForParse();
 
-            OfferHistory.init();
-            startService(new Intent(this, BeaconDiscoverer.class));
-
-            // if the device is prelollipop, user has to turn bluetooth on to detect beacons
-            if (Utility.isPreLollipop()) {
-                // Register for broadcasts on BluetoothAdapter state change
-                IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-                registerReceiver(bluetoothStateReceiver, filter);
-            }
+            // startService(new Intent(this, BeaconDiscoverer.class));
         } else {
             // show the signup or login screen
-            stopService(new Intent(this, BeaconDiscoverer.class));
+            // stopService(new Intent(this, BeaconDiscoverer.class));
             redirectToLoginActivity();
         }
 

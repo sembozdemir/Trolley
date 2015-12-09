@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.squareup.otto.Subscribe;
 import com.taurus.trolley.adapters.OfferHistoryListAdapter;
 import com.taurus.trolley.busevents.NewOfferEvent;
@@ -92,6 +93,7 @@ public class ProfileFragment extends Fragment {
                             R.layout.list_item_offer_history,
                             listOfferHistory);
                     listViewOfferHistory.setAdapter(offerHistoryListAdapter);
+                    ParseObject.pinAllInBackground(listOfferHistory);
                 }
             }
         });
@@ -99,7 +101,7 @@ public class ProfileFragment extends Fragment {
 
     @Subscribe
     public void newOfferEventReceived(NewOfferEvent event) {
-        offerHistoryListAdapter.add(event.offerHistory);
+        offerHistoryListAdapter.insert(event.offerHistory, 0);
     }
 
     @Subscribe

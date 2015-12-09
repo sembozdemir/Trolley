@@ -1,6 +1,7 @@
 package com.taurus.trolley;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.facebook.FacebookSdk;
 import com.orhanobut.hawk.Hawk;
@@ -21,16 +22,13 @@ import com.taurus.trolley.domain.Shelf;
 import com.taurus.trolley.domain.Shop;
 import com.taurus.trolley.domain.Transaction;
 import com.taurus.trolley.domain.User;
-
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
+import com.taurus.trolley.services.BeaconDiscoverer;
 
 /**
  * Created by semih on 08.11.2015.
  */
 public class App extends Application {
-
-    private BackgroundPowerSaver backgroundPowerSaver;
+    private static final String TAG = App.class.getSimpleName();
 
     public static Bus bus = new Bus(ThreadEnforcer.ANY);
 
@@ -38,9 +36,19 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        initFacebook();
+        initParse();
+        initHawk();
+
+        startService(new Intent(this, BeaconDiscoverer.class));
+    }
+
+    private void initFacebook() {
         // Facebook SDK initializing
         FacebookSdk.sdkInitialize(getApplicationContext());
+    }
 
+    private void initParse() {
         ParseUser.registerSubclass(User.class);
         ParseObject.registerSubclass(Brand.class);
         ParseObject.registerSubclass(Beacon.class);
@@ -56,7 +64,9 @@ public class App extends Application {
 
         Parse.initialize(this, "xS10JGDdNnFE0vb4yaHEkMrBcczWCKAu1yCdw5fD", "CUjI6Hs7GZmKpMMdcYGUjb3TEkTtMI6Xy15IkFfn");
         ParseFacebookUtils.initialize(this);
+    }
 
+    private void initHawk() {
         Hawk.init(this)
                 .setEncryptionMethod(HawkBuilder.EncryptionMethod.NO_ENCRYPTION)
                 .setStorage(HawkBuilder.newSharedPrefStorage(this))
@@ -73,8 +83,5 @@ public class App extends Application {
                     }
                 })
                 .build();
-
-        backgroundPowerSaver = new BackgroundPowerSaver(this);
-        BeaconManager.setAndroidLScanningDisabled(false);
     }
 }

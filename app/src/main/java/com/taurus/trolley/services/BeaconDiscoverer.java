@@ -27,6 +27,7 @@ import com.taurus.trolley.domain.OfferHistory;
 import com.taurus.trolley.domain.User;
 import com.taurus.trolley.helper.ParseQueryHelper;
 import com.taurus.trolley.utils.BeaconPool;
+import com.taurus.trolley.utils.Utility;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -34,6 +35,7 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,33 +47,9 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
     private static final String TAG = BeaconDiscoverer.class.getSimpleName();
     private static BeaconManager beaconManager;
     private static Region region;
+    private BackgroundPowerSaver backgroundPowerSaver;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "BeaconDiscoverer started up");
-        region = new Region("myRangingUniqueId", null, null, null);
-        beaconManager = BeaconManager.getInstanceForApplication(this);
-
-        beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-
-        // set the duration of the scan to be 5 seconds
-        beaconManager.setBackgroundScanPeriod(5000l);
-        // set the time between each scan to be 1 min (60 seconds)
-        beaconManager.setBackgroundBetweenScanPeriod(60000l);
-
-        // todo: it will be deleted, clear pool for debugging purpose
-        BeaconPool.getPool().clear();
-
-        beaconManager.bind(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "BeaconDiscoverer stopped");
-        beaconManager.unbind(this);
+    public BeaconDiscoverer() {
     }
 
     @Nullable
@@ -81,7 +59,47 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
     }
 
     @Override
+    public void onCreate() {
+        region = new Region("myRangingUniqueId", null, null, null);
+        beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
+
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
+
+        //configureBatterySaverMode();
+
+        // todo: it will be deleted, clear pool for debugging purpose
+        // BeaconPool.getPool().clear();
+
+        beaconManager.bind(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        beaconManager.unbind(this);
+        super.onDestroy();
+    }
+
+    private void configureBatterySaverMode() {
+        BeaconManager.setAndroidLScanningDisabled(true);
+        backgroundPowerSaver = new BackgroundPowerSaver(getApplicationContext());
+
+        // set the duration of the scan to be 5 seconds
+        beaconManager.setBackgroundScanPeriod(Utility.convertToMilliseconds(2));
+        // set the time between each scan to be 1 min (60 seconds)
+        beaconManager.setBackgroundBetweenScanPeriod(Utility.convertToMilliseconds(25));
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "BeaconDiscoverer started up");
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public void onBeaconServiceConnect() {
+        Log.d(TAG, "onBeaconServiceConnect");
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
@@ -98,6 +116,7 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
                             public void done(List results, ParseException e) {
                                 if (e == null) {
                                     final Offer offer = (Offer) results.get(ParseQueryHelper.OFFER_INDEX);
+                                    Log.d(TAG, "New Offer: " + offer.getDescription());
 
                                     final OfferHistory offerHistory = new OfferHistory(offer, User.currentUser(), false);
                                     offerHistory.saveInBackground(new SaveCallback() {
@@ -106,6 +125,8 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
                                             if (e == null) {
                                                 issueNotification(offer);
                                                 sendOfferEvent(offerHistory);
+                                            } else {
+                                                Log.e(TAG, e.getMessage());
                                             }
                                         }
                                     });
@@ -187,7 +208,7 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
         notifyMgr.notify(notificationId, builder.build());
     }
 
-    public static void stopRanging() {
+    public void stopRanging() {
         try {
             beaconManager.stopRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
@@ -195,7 +216,7 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
         }
     }
 
-    public static void startRanging() {
+    public void startRanging() {
         if (User.currentUser() == null)
             return;
 
