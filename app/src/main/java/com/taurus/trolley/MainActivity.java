@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             // do stuff with the user
 
+
             // To see dummy datas on Parse.com. It should be invoked only once for same data.
             // DummyData.setDummiesForParse();
 
