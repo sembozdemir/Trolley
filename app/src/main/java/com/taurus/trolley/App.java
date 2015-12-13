@@ -23,6 +23,7 @@ import com.taurus.trolley.domain.Shop;
 import com.taurus.trolley.domain.Transaction;
 import com.taurus.trolley.domain.User;
 import com.taurus.trolley.services.BeaconDiscoverer;
+import com.taurus.trolley.utils.DebugUtils;
 
 /**
  * Created by semih on 08.11.2015.
@@ -39,6 +40,8 @@ public class App extends Application {
         initFacebook();
         initParse();
         initHawk();
+
+        DebugUtils.init(this);
 
         startService(new Intent(this, BeaconDiscoverer.class));
     }

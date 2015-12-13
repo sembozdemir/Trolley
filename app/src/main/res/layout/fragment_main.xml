@@ -6,12 +6,15 @@
     tools:showIn="@layout/activity_main"
     tools:context=".MainActivityFragment">
 
-    <com.astuetz.PagerSlidingTabStrip
+    <io.karim.MaterialTabs
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:background="@color/colorPrimary"
-        app:pstsShouldExpand="true"
-        app:pstsIndicatorColor="@color/colorAccent"
+        android:textColor="@color/tab_text_color"
+        app:mtTextColorSelected="@color/tab_text_color"
+        app:mtSameWeightTabs="true"
+        app:mtIndicatorHeight="6dp"
+        app:mtIndicatorColor="@color/colorAccent"
         android:layout_height="?attr/actionBarSize" />
 
     <android.support.v4.view.ViewPager

@@ -45,6 +45,8 @@ import java.util.List;
  */
 public class BeaconDiscoverer extends Service implements BeaconConsumer {
     private static final String TAG = BeaconDiscoverer.class.getSimpleName();
+    private static final int SCAN_PERIOD_SECOND = 2;
+    private static final int BETWEEN_SCAN_PERIOD_SECOND = 25; // todo: it might be changed later
     private static BeaconManager beaconManager;
     private static Region region;
     private BackgroundPowerSaver backgroundPowerSaver;
@@ -66,7 +68,7 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
 
-        //configureBatterySaverMode();
+        configureBatterySaverMode();
 
         // todo: it will be deleted, clear pool for debugging purpose
         // BeaconPool.getPool().clear();
@@ -84,10 +86,10 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
         BeaconManager.setAndroidLScanningDisabled(true);
         backgroundPowerSaver = new BackgroundPowerSaver(getApplicationContext());
 
-        // set the duration of the scan to be 5 seconds
-        beaconManager.setBackgroundScanPeriod(Utility.convertToMilliseconds(2));
-        // set the time between each scan to be 1 min (60 seconds)
-        beaconManager.setBackgroundBetweenScanPeriod(Utility.convertToMilliseconds(25));
+        // set the duration of the scan
+        beaconManager.setBackgroundScanPeriod(Utility.convertToMilliseconds(SCAN_PERIOD_SECOND));
+        // set the time between each scan
+        beaconManager.setBackgroundBetweenScanPeriod(Utility.convertToMilliseconds(BETWEEN_SCAN_PERIOD_SECOND));
     }
 
     @Override
@@ -151,10 +153,7 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
         Picasso.with(this).load(imageUrl).fetch();
 
         // create resultIntent to launch OfferActivity
-        Intent resultIntent = new Intent(BeaconDiscoverer.this, OfferActivity.class);
-        resultIntent.putExtra(OfferActivity.EXTRA_OFFER_ID, offer.getObjectId());
-        resultIntent.putExtra(OfferActivity.EXTRA_OFFER_DESC, offer.getDescription());
-        resultIntent.putExtra(OfferActivity.EXTRA_BRAND_LOGO_URL, imageUrl);
+        Intent resultIntent = OfferActivity.newIntent(this, offer);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         BeaconDiscoverer.this,

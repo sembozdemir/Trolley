@@ -9,5 +9,14 @@
     <string name="tab_badges_title">Badges</string>
 
     <string name="facebook_app_id">1490464894588820</string>
-    <string name="title_activity_offer">OfferActivity</string>
+    <string name="title_activity_offer">Offer</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="button_login_label">Login</string>
+    <string name="sign_up_label">Or sign up with e-mail</string>
+    <string name="button_sign_up_label">Sign Up</string>
+    <string name="hint_email">E-mail</string>
+    <string name="radio_male_label">male</string>
+    <string name="radio_female_label">female</string>
+    <string name="profile_history_label">HISTORY</string>
 </resources>

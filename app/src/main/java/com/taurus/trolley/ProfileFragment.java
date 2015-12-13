@@ -1,11 +1,13 @@
 package com.taurus.trolley;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
     private ListView listViewOfferHistory;
@@ -35,6 +37,7 @@ public class ProfileFragment extends Fragment {
     private ImageView imageViewProfile;
     private TextView textViewWelcome;
     private TextView textViewCoins;
+    private ArrayList<OfferHistory> listOfferHistory;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -70,13 +73,30 @@ public class ProfileFragment extends Fragment {
 
     private void initViews(View rootView) {
         imageViewProfile = (ImageView) rootView.findViewById(R.id.image_view_profile);
+        imageViewProfile.setOnClickListener(this);
         textViewWelcome = (TextView) rootView.findViewById(R.id.text_view_welcome_message);
+        textViewWelcome.setOnClickListener(this);
         textViewCoins = (TextView) rootView.findViewById(R.id.text_view_coins);
         listViewOfferHistory = (ListView) rootView.findViewById(R.id.list_view_offer_history);
+        listViewOfferHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                OfferHistory offerHistory = listOfferHistory.get(position);
+                Intent intent = OfferActivity.newIntent(getActivity(), offerHistory.getOffer());
+                startActivity(intent);
+            }
+        });
     }
 
     private void handleWelcomeMessage() {
-        textViewWelcome.setText("Hi, " + User.currentUser().getFirstName() + " " + User.currentUser().getLastName());
+        String welcomeMsg;
+        if (User.currentUser().getFirstName() != null
+                && User.currentUser().getLastName() != null) {
+            welcomeMsg = "Hi, " + User.currentUser().getFirstName() + " " + User.currentUser().getLastName();
+        } else {
+            welcomeMsg = "Hi, " + User.currentUser().getUsername();
+        }
+        textViewWelcome.setText(welcomeMsg);
     }
 
     private void handleScore() {
@@ -88,7 +108,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void done(List results, ParseException e) {
                 if (e == null) {
-                    List<OfferHistory> listOfferHistory = new ArrayList<>((List<OfferHistory>) results.get(ParseQueryHelper.OFFER_HISTORY_INDEX));
+                    listOfferHistory = new ArrayList<>((List<OfferHistory>) results.get(ParseQueryHelper.OFFER_HISTORY_INDEX));
                     offerHistoryListAdapter = new OfferHistoryListAdapter(getActivity(),
                             R.layout.list_item_offer_history,
                             listOfferHistory);
@@ -112,5 +132,10 @@ public class ProfileFragment extends Fragment {
 
     public static Fragment newInstance() {
         return new ProfileFragment();
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

@@ -9,6 +9,17 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_offer" tools:context="com.taurus.trolley.OfferActivity">
 
+    <TextView
+        android:id="@+id/text_view_offer_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="64dp"
+        android:textStyle="bold"
+        android:textSize="48sp"
+        android:text="OfferId" />
+
     <ImageView
         android:id="@+id/image_view_offer_brand_logo"
         android:layout_width="wrap_content"
@@ -18,6 +29,7 @@
     <TextView
         android:id="@+id/text_view_offer_description"
         android:text="Offer"
+        android:gravity="center"
         android:layout_marginTop="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
