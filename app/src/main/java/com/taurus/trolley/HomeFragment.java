@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private ListView listViewOfferHistory;
@@ -39,7 +39,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView textViewCoins;
     private ArrayList<OfferHistory> listOfferHistory;
 
-    public ProfileFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -59,7 +59,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         initViews(rootView);
         if (User.currentUser() != null) {
@@ -131,11 +131,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     public static Fragment newInstance() {
-        return new ProfileFragment();
+        return new HomeFragment();
     }
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.text_view_welcome_message:
+            case R.id.image_view_profile:
+                startProfileActivity();
+                break;
+        }
+    }
 
+    private void startProfileActivity() {
+        Intent intent = ProfileActivity.newIntentForCurrentUser(getActivity());
+        startActivity(intent);
     }
 }

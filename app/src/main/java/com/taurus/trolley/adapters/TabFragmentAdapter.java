@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.taurus.trolley.BadgesFragment;
 import com.taurus.trolley.NearbyFragment;
-import com.taurus.trolley.ProfileFragment;
+import com.taurus.trolley.HomeFragment;
 import com.taurus.trolley.R;
 
 import io.karim.MaterialTabs;
@@ -50,13 +50,13 @@ public class TabFragmentAdapter extends FragmentPagerAdapter implements Material
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ProfileFragment.newInstance();
+                return HomeFragment.newInstance();
             case 1:
                 return NearbyFragment.newInstance();
             case 2:
                 return BadgesFragment.newInstance();
             default:
-                return ProfileFragment.newInstance();
+                return HomeFragment.newInstance();
         }
     }
 

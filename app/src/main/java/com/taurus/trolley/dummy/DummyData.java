@@ -60,4 +60,14 @@ public class DummyData {
         Beacon beaconShirts = new Beacon("D7:53:00:31:7D:1D", zaraShopShirtsShelf);
         beaconShirts.saveInBackground();
     }
+
+    public static void addNewShops() {
+        // create brand
+        Brand lcw = new Brand("LCW", "http://imgreview.com/gVMo8");
+        lcw.saveInBackground();
+        Shop lcwOptimum = new Shop("LCW Optimum", lcw, 38.3386898, 27.1345174);
+        lcwOptimum.saveInBackground();
+        Shop lcwUcyol = new Shop("LCW Ucyol", lcw, 38.4049643, 27.126327);
+        lcwUcyol.saveInBackground();
+    }
 }

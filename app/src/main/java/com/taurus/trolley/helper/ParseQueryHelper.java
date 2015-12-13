@@ -1,9 +1,12 @@
 package com.taurus.trolley.helper;
 
+import android.location.Location;
+
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.taurus.trolley.domain.Beacon;
@@ -21,10 +24,11 @@ import java.util.List;
  */
 public class ParseQueryHelper {
     private static final String TAG = ParseQueryHelper.class.getSimpleName();
-    public static final int OFFER_INDEX = 0;
-    public static final int OFFER_HISTORY_INDEX = 0;
     private static final String CREATED_AT = "createdAt";
     private static final String MY_OFFER_HISTORY = "myOfferHistory";
+    public static final int OFFER_INDEX = 0;
+    public static final int OFFER_HISTORY_INDEX = 0;
+    public static final int NEAR_SHOPS_INDEX = 0;
 
 
     public static void getOfferHistory(final Callback callback) {
@@ -89,6 +93,27 @@ public class ParseQueryHelper {
                     });
                 }
 
+            }
+        });
+    }
+
+    public static void getNearShops(Location location, int maxDistanceKm, final Callback callback) {
+        final List results = new ArrayList();
+        ParseGeoPoint geoPoint = new ParseGeoPoint(location.getLatitude(),
+                location.getLongitude());
+        ParseQuery<Shop> nearShopsQuery = ParseQuery.getQuery(Shop.class);
+        nearShopsQuery.include(generateIncludeParameter(Shop.BRAND));
+        nearShopsQuery.whereWithinKilometers(Shop.GEO_POINT, geoPoint, maxDistanceKm);
+        nearShopsQuery.setLimit(20);
+        nearShopsQuery.findInBackground(new FindCallback<Shop>() {
+            @Override
+            public void done(List<Shop> list, ParseException e) {
+                if (e != null) {
+                    callback.done(results, e);
+                } else {
+                    results.add(NEAR_SHOPS_INDEX, list);
+                    callback.done(results, e);
+                }
             }
         });
     }

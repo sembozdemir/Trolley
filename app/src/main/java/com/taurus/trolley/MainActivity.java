@@ -6,17 +6,17 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.squareup.otto.Subscribe;
 import com.taurus.trolley.busevents.BluetoothEvent;
+import com.taurus.trolley.busevents.CouldNotGetLocationEvent;
 import com.taurus.trolley.domain.User;
 import com.taurus.trolley.helper.BluetoothStateHelper;
 
@@ -39,9 +39,13 @@ public class MainActivity extends AppCompatActivity {
         final User currentUser = User.currentUser();
         if (currentUser != null) {
             // do stuff with the user
+            if (!BluetoothStateHelper.isBluetoothEnabled()) {
+                handleBluetoothStateOff();
+            }
 
             // To see dummy datas on Parse.com. It should be invoked only once for same data.
             // DummyData.setDummiesForParse();
+            // DummyData.addNewShops();
         } else {
             // show the signup or login screen
             // stopService(new Intent(this, BeaconDiscoverer.class));
@@ -80,6 +84,20 @@ public class MainActivity extends AppCompatActivity {
             unregisterReceiver(bluetoothStateReceiver);
             bluetoothStateReceiver.setRegistered(false);
         }
+    }
+
+    @Subscribe
+    public void couldNotGetLocationEventReceived(CouldNotGetLocationEvent event) {
+        String message = "Please turn on your location services to see nearby shops";
+        Log.i(TAG, message);
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setText(message)
+                .setAction("TURN ON", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                }).show();
     }
 
     @Subscribe
@@ -150,27 +168,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
 
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

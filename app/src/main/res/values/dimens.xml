@@ -9,4 +9,5 @@
     <dimen name="profile_panel_header_height">60dp</dimen>
     <dimen name="profile_panel_height">120dp</dimen>
     <dimen name="tab_size">8dp</dimen>
+    <dimen name="shop_detail_panel_brand_logo_size">80dp</dimen>
 </resources>

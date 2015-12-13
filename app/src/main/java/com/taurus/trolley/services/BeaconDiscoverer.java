@@ -169,11 +169,12 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(BeaconDiscoverer.this);
         builder.setContentTitle("Trolley Fırsatı")
                 .setContentText(offer.getDescription())
-                .setSmallIcon(R.drawable.ic_bag)
+                .setSmallIcon(R.drawable.ic_bag_greyscale)
                 .setAutoCancel(true)
                 .setLargeIcon(placeholder)
                 .setDefaults(0) // so that it does not ring twice
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(offer.getDescription())) // so that it can be expandable
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(offer.getDescription())) // so that it can be expandable
                 .setContentIntent(resultPendingIntent);
 
         // Sets an ID for the notification
