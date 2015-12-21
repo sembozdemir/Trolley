@@ -111,30 +111,32 @@ public class BeaconDiscoverer extends Service implements BeaconConsumer {
 
                     // if beacon has never been detected before
                     if (!BeaconPool.getPool().contains(firstBeacon)) {
-                        BeaconPool.getPool().add(firstBeacon);
-                        // check Beacon
-                        ParseQueryHelper.getOfferFromBeacon(firstBeacon.getBluetoothAddress(), new ParseQueryHelper.Callback() {
-                            @Override
-                            public void done(List results, ParseException e) {
-                                if (e == null) {
-                                    final Offer offer = (Offer) results.get(ParseQueryHelper.OFFER_INDEX);
-                                    Log.d(TAG, "New Offer: " + offer.getDescription());
+                        if (User.currentUser() != null) {
+                            BeaconPool.getPool().add(firstBeacon);
+                            // check Beacon
+                            ParseQueryHelper.getOfferFromBeacon(firstBeacon.getBluetoothAddress(), new ParseQueryHelper.Callback() {
+                                @Override
+                                public void done(List results, ParseException e) {
+                                    if (e == null) {
+                                        final Offer offer = (Offer) results.get(ParseQueryHelper.OFFER_INDEX);
+                                        Log.d(TAG, "New Offer: " + offer.getDescription());
 
-                                    final OfferHistory offerHistory = new OfferHistory(offer, User.currentUser(), false);
-                                    offerHistory.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            if (e == null) {
-                                                issueNotification(offer);
-                                                sendOfferEvent(offerHistory);
-                                            } else {
-                                                Log.e(TAG, e.getMessage());
+                                        final OfferHistory offerHistory = new OfferHistory(offer, User.currentUser(), false);
+                                        offerHistory.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                if (e == null) {
+                                                    issueNotification(offer);
+                                                    sendOfferEvent(offerHistory);
+                                                } else {
+                                                    Log.e(TAG, e.getMessage());
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
             }

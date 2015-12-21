@@ -21,6 +21,7 @@ import com.taurus.trolley.busevents.UserSavedSuccesfullyEvent;
 import com.taurus.trolley.domain.Badge;
 import com.taurus.trolley.domain.User;
 import com.taurus.trolley.helper.FacebookHelper;
+import com.taurus.trolley.services.BeaconDiscoverer;
 import com.taurus.trolley.utils.Constants;
 import com.taurus.trolley.utils.DebugUtils;
 
@@ -191,6 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void redirectToMainActivity() {
+        startService(new Intent(getApplicationContext(), BeaconDiscoverer.class));
         Log.d(TAG, "Redirecting to MainActivity");
         Intent i = new Intent(this, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

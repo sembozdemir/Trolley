@@ -5,11 +5,12 @@
     tools:context=".HomeFragment">
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sliding_layout_profile"
+        android:id="@+id/sliding_layout_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        app:umanoDragView="@+id/dragView"
+        android:background="@drawable/background_image"
+        app:umanoDragView="@+id/slide_button"
         app:umanoOverlay="true"
         app:umanoAnchorPoint="0.8"
         app:umanoPanelHeight="@dimen/profile_panel_height"
@@ -19,7 +20,6 @@
         <!-- Main Content -->
         <LinearLayout
             android:id="@+id/main_layout"
-            android:background="@drawable/background_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -93,45 +93,44 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/dragView"-->
+                <!--android:background="@color/colorAccent"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/profile_panel_header_height">-->
+
+                <!--<TextView-->
+                    <!--android:text="@string/profile_history_label"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_centerHorizontal="true"/>-->
+
+            <!--</RelativeLayout>-->
+
             <RelativeLayout
-                android:id="@+id/dragView"
-                android:background="@color/colorAccent"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/profile_panel_header_height">
-
-                <TextView
-                    android:text="@string/profile_history_label"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"/>
-
-            </RelativeLayout>
-
-<!--            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:background="#EEEEEE"
+                    android:background="@color/colorBackground"
                     android:layout_alignParentBottom="true" />
 
-                <ImageView
-                    android:id="@+id/image_view_draggable"
+                <com.taurus.trolley.customviews.SlideButton
+                    android:id="@+id/slide_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_bag_alternative" />
+                    android:layout_centerInParent="true" />
 
-            </RelativeLayout>-->
+            </RelativeLayout>
 
             <ListView
-                android:background="#EEEEEE"
+                android:background="@color/colorBackground"
                 android:id="@+id/list_view_offer_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

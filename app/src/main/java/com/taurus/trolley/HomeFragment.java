@@ -14,10 +14,12 @@ import android.widget.TextView;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.otto.Subscribe;
 import com.taurus.trolley.adapters.OfferHistoryListAdapter;
 import com.taurus.trolley.busevents.NewOfferEvent;
 import com.taurus.trolley.busevents.UserSavedSuccesfullyEvent;
+import com.taurus.trolley.customviews.SlideButton;
 import com.taurus.trolley.domain.OfferHistory;
 import com.taurus.trolley.domain.User;
 import com.taurus.trolley.helper.ParseQueryHelper;
@@ -29,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener, SlidingUpPanelLayout.PanelSlideListener {
 
 
     private ListView listViewOfferHistory;
@@ -37,6 +39,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ImageView imageViewProfile;
     private TextView textViewWelcome;
     private TextView textViewCoins;
+    private SlideButton slideButton;
     private ArrayList<OfferHistory> listOfferHistory;
 
     public HomeFragment() {
@@ -72,6 +75,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initViews(View rootView) {
+        SlidingUpPanelLayout slidingUpPanel =
+                (SlidingUpPanelLayout) rootView.findViewById(R.id.sliding_layout_home);
+        slidingUpPanel.setPanelSlideListener(this);
+        slideButton = (SlideButton) rootView.findViewById(R.id.slide_button);
         imageViewProfile = (ImageView) rootView.findViewById(R.id.image_view_profile);
         imageViewProfile.setOnClickListener(this);
         textViewWelcome = (TextView) rootView.findViewById(R.id.text_view_welcome_message);
@@ -147,5 +154,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void startProfileActivity() {
         Intent intent = ProfileActivity.newIntentForCurrentUser(getActivity());
         startActivity(intent);
+    }
+
+    @Override
+    public void onPanelSlide(View panel, float slideOffset) {
+
+    }
+
+    @Override
+    public void onPanelCollapsed(View panel) {
+        slideButton.setCollapsed();
+    }
+
+    @Override
+    public void onPanelExpanded(View panel) {
+        slideButton.setExpanded();
+    }
+
+    @Override
+    public void onPanelAnchored(View panel) {
+        slideButton.setExpanded();
+    }
+
+    @Override
+    public void onPanelHidden(View panel) {
+
     }
 }

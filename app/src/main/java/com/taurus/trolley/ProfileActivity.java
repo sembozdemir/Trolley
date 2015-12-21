@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.taurus.trolley.domain.User;
+import com.taurus.trolley.utils.BeaconPool;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -95,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    BeaconPool.getPool().clear();
                     redirectToLoginActivity();
                 } else {
                     // Logout unsuccessful

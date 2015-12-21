@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.taurus.trolley.BadgesFragment;
-import com.taurus.trolley.NearbyFragment;
 import com.taurus.trolley.HomeFragment;
+import com.taurus.trolley.NearbyFragment;
 import com.taurus.trolley.R;
 
 import io.karim.MaterialTabs;
